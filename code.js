@@ -1,44 +1,35 @@
-/* Word Split Game – scalable difficulty & 60‑second rounds
- * --------------------------------------------------------
- * Difficulty ramps up: pool starts at 500 common words, +500 each round until 10,000.
- */
-
 const WORDS_FILE = 'words.txt';
-const WORDS_PER_ROUND = 8;
-const ROUND_TIME = 60;               // seconds per round
-const POOL_INCREMENT = 500;          // enlarge pool by 500 each round
-const MAX_POOL_SIZE = 10000;         // cap pool size
+const WORDS_PER_ROUND = 6;
+const ROUND_TIME = 30;
+const POOL_INCREMENT = 500;
+const MAX_POOL_SIZE = 10000;
 
-let allWords = [];                   // full list (loaded once)
-let currentPoolSize = 500;           // starts easy
+let allWords = [];
+let currentPoolSize = 500;
 
 let totalScore = 0;
 let roundMatches = 0;
 
-let grid, scoreSpan, timerSpan;
+let grid, scoreSpan, timerSpan, messageDiv;
 let wordsSet = [];
 let halves = [];
 let selectedDiv = null;
 let remainingTime = ROUND_TIME;
 let timerId = null;
 
-const log = (...args) => console.log('%c[WordGame]', 'color:#2196f3;font-weight:bold', ...args);
-
-/* -------------------------------------------------- load words (once) */
 async function loadWordList() {
-    if (allWords.length) return;       // already loaded
+    if (allWords.length) return;
     try {
         const res = await fetch(WORDS_FILE);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const txt = await res.text();
-        allWords = txt.trim().split(/\r?\n/).filter(w => w.length === 8);
-        log('Total 8‑letter words loaded:', allWords.length);
+        allWords = txt.split('\n');
+        if (allWords[allWords.length - 1] === '') allWords.pop();
     } catch (err) {
         console.error('[WordGame] Failed to load word list:', err);
     }
 }
 
-/* -------------------------------------------------- word selection & shuffling */
 function pickWordsForRound() {
     const pool = allWords.slice(0, Math.min(currentPoolSize, allWords.length));
     const copy = [...pool];
@@ -63,11 +54,19 @@ function shuffle(arr) {
     }
 }
 
-/* -------------------------------------------------- UI helpers */
-function updateScore() { scoreSpan.textContent = totalScore; }
-function updateTimer() { timerSpan.textContent = remainingTime; }
+function updateScore() {
+    scoreSpan.textContent = totalScore;
+}
 
-function stopTimer() { clearInterval(timerId); timerId = null; }
+function updateTimer() {
+    timerSpan.textContent = remainingTime;
+}
+
+function stopTimer() {
+    clearInterval(timerId);
+    timerId = null;
+}
+
 function startTimer() {
     remainingTime = ROUND_TIME;
     updateTimer();
@@ -77,12 +76,14 @@ function startTimer() {
         updateTimer();
         if (remainingTime <= 0) {
             stopTimer();
-            endGame('Time is up!');
+            endGame('Time’s up!');
         }
     }, 1000);
 }
 
-function clearGrid() { grid.innerHTML = ''; }
+function clearGrid() {
+    grid.innerHTML = '';
+}
 
 function resetSelections() {
     if (selectedDiv) selectedDiv.classList.remove('selected');
@@ -100,7 +101,18 @@ function createGrid() {
     });
 }
 
-/* -------------------------------------------------- game flow */
+
+function showMessage(html, stateClass) {
+    document.querySelector('.game-area').classList.add(stateClass);
+    messageDiv.innerHTML = html;
+}
+
+function clearMessage() {
+    const area = document.querySelector('.game-area');
+    area.classList.remove('starting', 'ended');
+    messageDiv.innerHTML = '';
+}
+
 function increaseDifficulty() {
     if (currentPoolSize < MAX_POOL_SIZE) {
         currentPoolSize = Math.min(currentPoolSize + POOL_INCREMENT, MAX_POOL_SIZE);
@@ -114,28 +126,43 @@ function nextRound() {
     wordsSet = pickWordsForRound();
     halves = splitHalves(wordsSet);
     shuffle(halves);
+
     createGrid();
     startTimer();
-
-    log(`Pool size: ${currentPoolSize}. Words this round:`, wordsSet);
 }
 
-function endGame(message) {
-    stopTimer();
-    resetSelections();
-    clearGrid();
-    alert(`${message}\nFinal score: ${totalScore}`);
-    // Reset everything
+function startNewGame() {
     currentPoolSize = 500;
     totalScore = 0;
     updateScore();
-    setTimeout(nextRound, 300);
+    clearMessage();
+    nextRound();
 }
 
-/* -------------------------------------------------- interactions */
+function onGameOver(message) {
+    stopTimer();
+    resetSelections();
+    clearGrid();
+
+    showMessage(
+        `<h2>${message}</h2>
+     <p>You completed <strong>${totalScore}</strong> levels!</p>
+     <button id="play-again">Play Again</button>`,
+        'ended'
+    );
+
+    document.getElementById('play-again')
+        .addEventListener('click', startNewGame, { once: true });
+}
+
+function endGame(msg) {
+    onGameOver(msg === 'Incorrect match!' ? 'Incorrect match!' : 'Time’s up!');
+}
+
+
 function handleClick(e) {
     const div = e.currentTarget;
-    if (div.classList.contains('matched')) return; // already matched
+    if (div.classList.contains('matched')) return;
 
     if (!selectedDiv) {
         selectedDiv = div;
@@ -154,13 +181,13 @@ function handleClick(e) {
         selectedDiv.classList.add('matched');
         div.classList.add('matched');
 
-        totalScore++;
         roundMatches++;
-        updateScore();
         selectedDiv = null;
 
         if (roundMatches === WORDS_PER_ROUND) {
             stopTimer();
+            totalScore++;
+            updateScore();
             increaseDifficulty();
             setTimeout(nextRound, 500);
         }
@@ -169,15 +196,28 @@ function handleClick(e) {
     }
 }
 
-/* -------------------------------------------------- bootstrap */
 document.addEventListener('DOMContentLoaded', async () => {
     grid = document.getElementById('grid');
     scoreSpan = document.getElementById('score');
     timerSpan = document.getElementById('timer');
+    messageDiv = document.getElementById('message');
 
     updateScore();
     updateTimer();
 
     await loadWordList();
-    nextRound();
+
+    showMessage(
+        `<h2>Welcome to Word Fuse!</h2>
+      <p>Each round you have ${ROUND_TIME} seconds to combine ${WORDS_PER_ROUND} words that have been halved.<br>
+      After each successful round the words get harder.</p>
+     <button id="start-btn">Start Game</button>`,
+        'starting'
+    );
+
+    document.getElementById('start-btn')
+        .addEventListener('click', () => {
+            clearMessage();
+            nextRound();
+        }, { once: true });
 });
