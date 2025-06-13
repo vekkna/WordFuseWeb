@@ -78,7 +78,13 @@ function handleRoundEnd(activePlayerSolved) {
         document.getElementById('newMatch')
             .addEventListener('click', startMatch, { once: true });
     } else {
-        setTimeout(nextGrid, 1000);
+        msg.innerHTML = `<p>Player ${winner + 1} scores a point!</p>
+            <button id="nextRound">Next round</button>`;
+        document.getElementById('nextRound')
+            .addEventListener('click', () => {
+                msg.textContent = '';
+                nextGrid();
+            }, { once: true });
     }
 }
 
