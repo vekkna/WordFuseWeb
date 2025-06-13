@@ -38,7 +38,7 @@ function nextGrid() {
     timer.textContent = '—';
     msg.textContent = 'Click Accept when ready!';
     enableAcceptBtns(true);
-    game.startNewRound(getCurrentDifficulty());
+    game.startNewRound(getCurrentDifficulty(), true); // pause game timer
 }
 
 p1Btn.addEventListener('click', () => playerAccepts(0));
@@ -61,7 +61,7 @@ function startTurnTimer() {
         timer.textContent = --t;
         if (t === 0) {
             clearInterval(turnTimerId);
-            handleRoundEnd(false);                      // ran out of time
+            game.abortRound('time');                    // let engine handle end
         }
     }, 1000);
 }
