@@ -35,10 +35,10 @@ function startMatch() {
 
 function nextGrid() {
     active = null;
-    timer.textContent = '—';
+    timer.textContent = '15';
     msg.textContent = 'Click Accept when ready!';
     enableAcceptBtns(true);
-    game.startNewRound(getCurrentDifficulty());
+    game.startNewRound(getCurrentDifficulty(), false);
 }
 
 p1Btn.addEventListener('click', () => playerAccepts(0));
@@ -74,12 +74,12 @@ function handleRoundEnd(activePlayerSolved) {
     updateScoreUI();
 
     if (scores[winner] === 3) {
-        msg.innerHTML = `<strong>Player ${winner + 1} wins the match!</strong>
+        msg.innerHTML = `<h2>Player ${winner + 1} wins the match!</h2>
                      <br><button id="newMatch">Play again</button>`;
         document.getElementById('newMatch')
             .addEventListener('click', startMatch, { once: true });
     } else {
-        msg.innerHTML = `<p>Player ${winner + 1} scores a point!</p>
+        msg.innerHTML = `<h3>Player ${winner + 1} scores a point!</h3>
             <button id="nextRound">Next round</button>`;
         document.getElementById('nextRound')
             .addEventListener('click', () => {
@@ -104,5 +104,5 @@ function getCurrentDifficulty() {
     // The _losing_ player’s score is min(scores), so difficulty is inversely
     // linked to it.  Example strategy: currentPoolSize = 500 + losing*500
     const losingScore = Math.min(...scores);
-    return 500 + losingScore * 500;      // tweak however you like
+    return 1000 + losingScore * 1000;      // tweak however you like
 }

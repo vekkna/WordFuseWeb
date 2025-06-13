@@ -28,7 +28,7 @@ export class WordSplitGame {
     /* ─────────────────────────────────────────── constants (tweak freely) */
     static WORDS_FILE = 'words.txt';
     static WORDS_PER_ROUND = 6;
-    static ROUND_TIME = 30;      // seconds
+    static ROUND_TIME = 60;      // seconds
     static POOL_INCREMENT = 500;
     static MAX_POOL_SIZE = 10000;
 
@@ -80,12 +80,14 @@ export class WordSplitGame {
     }
 
     /* ─────────────────────────────────────────── public API */
-    startNewRound(poolSizeOverride) {
+    startNewRound(poolSizeOverride, startNow = true) {
         /* stop any previous activity */
         this._clearTimer();
         this._clearGrid();
         this._resetSelections();
         this._roundMatches = 0;
+
+
 
         /* pick pool size */
         if (typeof poolSizeOverride === 'number') {
@@ -102,7 +104,13 @@ export class WordSplitGame {
         this._renderGrid();
 
         /* count-down */
-        this._remainingTime = WordSplitGame.ROUND_TIME;
+        if (startNow) {
+            this.startTimer(30)
+        }
+    }
+
+    startTimer(startingTime) {
+        this._remainingTime = startingTime;
         this._updateTimerUI();
         this._timerId = setInterval(() => this._tick(), 1000);
     }
@@ -206,12 +214,14 @@ export class WordSplitGame {
             this._selectedTile.classList.add('matched');
             tile.classList.add('matched');
 
-            this._totalScore++;
+
             this._roundMatches++;
             this._updateScoreUI();
             this._selectedTile = null;
 
             if (this._roundMatches === WordSplitGame.WORDS_PER_ROUND) {
+                this._totalScore++;
+                this._updateScoreUI();
                 this._roundComplete(true);
             }
         } else {

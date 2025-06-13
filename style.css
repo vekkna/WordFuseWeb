@@ -236,7 +236,7 @@ header {
 #twoHeader {
     display: none;
     width: 100%;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     padding: 1rem 2rem;
     background: #2c3e50;
