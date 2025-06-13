@@ -161,3 +161,130 @@ header {
 .game-area.ended #grid {
     display: none;
 }
+
+/* ─── helper to hide things ─── */
+.hidden {
+    display: none !important;
+}
+
+/* ─── Landing / Rules Screen ─── */
+#landing {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background: #f7f7f7;
+    text-align: left;
+}
+
+#landing h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+#landing p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0 0 2rem;
+    max-width: 360px;
+}
+
+#landing .btn-row {
+    display: flex;
+    gap: 1rem;
+}
+
+#landing .btn-row button {
+    flex: 1 1 140px;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    background: #2c3e50;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#landing .btn-row button:hover {
+    background: #1f2b3a;
+}
+
+/* ─── Game Root (hidden until mode select) ─── */
+#gameRoot {
+    display: none;
+    /* hidden by default */
+    height: 100%;
+    flex-direction: column;
+    /* header + main stack vertically */
+}
+
+#gameRoot.single {
+    display: flex;
+    /* show single-player layout */
+}
+
+#gameRoot.two {
+    display: flex;
+    /* show 2-player layout */
+}
+
+/* ─── Headers for single vs two-player ─── */
+#singleHeader,
+#twoHeader {
+    display: none;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+#gameRoot.single #singleHeader {
+    display: flex;
+}
+
+#gameRoot.two #twoHeader {
+    display: flex;
+}
+
+/* center the grid+message under the header */
+.game-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+    box-sizing: border-box;
+}
+
+/* 2-player “Accept” row */
+.accept-row {
+    display: none;
+    margin-top: 1rem;
+    gap: 1rem;
+    justify-content: center;
+}
+
+#gameRoot.two .accept-row {
+    display: flex;
+}
+
+.accept-row button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    background: #27ae60;
+    color: #fff;
+    cursor: pointer;
+}
+
+.accept-row button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}

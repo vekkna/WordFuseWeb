@@ -3,24 +3,141 @@
 
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Word Split Game</title>
-        <!-- fixed: point directly at the stylesheet in project root -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Word Split</title>
         <link rel="stylesheet" href="style.css" />
+        <style>
+ 
+        </style>
     </head>
 
     <body>
-        <header>
-            <div>Score: <span id="score">0</span></div>
-            <div id="timer">30</div>
-        </header>
-        <main class="game-area">
-            <!-- in-page messages / buttons will go here -->
-            <div id="message" class="message"></div>
-            <!-- the grid itself -->
-            <div id="grid"></div>
-        </main>
-        <script src="code.js"></script>
+        <!-- ─── Landing Screen ─── -->
+        <section id="landing">
+            <h1>Word Split</h1>
+            <p>Each 8-letter word is split into two 4-letter halves. Select two halves to reassemble a valid word. </p>
+            <table class="mode-table">
+                <tbody>
+                    <tr>
+                        <td><strong>Single Player</strong></td>
+                        <td>
+                            <ul>
+                                <li>Each level, match 6 words in 30 seconds.</li>
+                                <li>Clear as many levels as you can.</li>
+                                <li>Words getter harder after each successful level.</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>2-Player</strong></td>
+                        <td>
+                            <ul>
+                                <li>Study the grid.</li>
+                                <li>First player to accept it has 15s to clear it.</li>
+                                <li>Succeed to score a point; fail and your opponent scores.</li>
+                                <li>First to 3 points wins the match.</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="btn-row">
+                <button id="singleBtn">Single Player</button>
+                <button id="twoBtn">2-Player</button>
+            </div>
+        </section>
+        <!-- ─── Game Area (after selection) ─── -->
+        <div id="gameRoot">
+            <header>
+                <div id="singleHeader">
+                    <div>Score: <span id="score">0</span></div>
+                    <div id="timer">30</div>
+                </div>
+                <div id="twoHeader">
+                    <div>Player 1: <span id="p1Score">0</span></div>
+                    <div id="timer">15</div>
+                    <div>Player 2: <span id="p2Score">0</span></div>
+                </div>
+            </header>
+            <main class="game-area">
+                <div id="message" class="message"></div>
+                <div id="grid"></div>
+                <div class="accept-row">
+                    <button id="p1Accept">P1 Accept</button>
+                    <button id="p2Accept">P2 Accept</button>
+                </div>
+            </main>
+        </div>
+        <script type="module">
+            const landing = document.getElementById('landing');
+            const gameRoot = document.getElementById('gameRoot');
+            const singleBtn = document.getElementById('singleBtn');
+            const twoBtn = document.getElementById('twoBtn');
+
+            function startSingle() {
+                landing.classList.add('hidden');
+                gameRoot.classList.add('single');
+            }
+
+            function startTwo() {
+                landing.classList.add('hidden');
+                gameRoot.classList.add('two');
+            }
+
+            /* ─── Single Player ─── */
+            singleBtn.addEventListener('click', async () => {
+                startSingle();
+                const { WordSplitGame } = await import('./single.js');
+                // ensure the word list is loaded
+                await WordSplitGame.loadWordList();
+
+                const grid = document.getElementById('grid');
+                const score = document.getElementById('score');
+                const timer = document.querySelector('#singleHeader #timer');
+                const message = document.getElementById('message');
+
+                const game = new WordSplitGame({
+                    gridEl: grid,
+                    scoreEl: score,
+                    timerEl: timer,
+                    messageEl: message,
+                    onRoundEnd({ won, reason }) {
+                        if (!won) {
+                            message.innerHTML = `
+              <p>${reason === 'time' ? 'Time’s up!' : 'Incorrect match!'}</p>
+              <button id="playAgain">Play again</button>`;
+                            document.getElementById('playAgain')
+                                .addEventListener('click', () => {
+                                    message.innerHTML = '';
+                                    game.startNewRound();
+                                }, { once: true });
+                        } else {
+                            setTimeout(() => game.startNewRound(), 800);
+                        }
+                    }
+                });
+
+                // show the intro + Start button
+                message.innerHTML = `
+        <p>Match ${WordSplitGame.WORDS_PER_ROUND} words in ${WordSplitGame.ROUND_TIME}s.</p>
+        <button id="beginGame">Start Game</button>`;
+                document.getElementById('beginGame')
+                    .addEventListener('click', () => {
+                        message.innerHTML = '';
+                        game.startNewRound();
+                    }, { once: true });
+            });
+
+            /* ─── Two-Player ─── */
+            twoBtn.addEventListener('click', async () => {
+                startTwo();
+                const { WordSplitGame } = await import('./single.js');
+                await WordSplitGame.loadWordList();
+
+                // now load versus logic which picks up the DOM you already have
+                await import('./versus.js');
+            });
+        </script>
     </body>
 
 </html>
