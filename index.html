@@ -12,7 +12,7 @@
         <!-- ─── Landing Screen ─── -->
         <section id="landing">
             <h1>Word Split</h1>
-            <p>Each 8-letter word is split into two 4-letter halves. Select two halves to reassemble a valid word. </p>
+            <p>Each 8-letter word is split in half. <br>Select two halves to reassemble a valid word. </p>
             <table class="mode-table">
                 <tbody>
                     <tr>
@@ -30,9 +30,9 @@
                         <td>
                             <ul>
                                 <li>Study the grid.</li>
-                                <li>First player to accept it has 15s to clear it.</li>
-                                <li>Succeed to score a point; fail and your opponent scores.</li>
-                                <li>First to 3 points wins the match.</li>
+                                <li>First player to accept has 15s to clear it.</li>
+                                <li>Succeed and score 1 point; fail and your opponent scores 1 .</li>
+                                <li>Score 3 points to win the match.</li>
                             </ul>
                         </td>
                     </tr>
@@ -47,13 +47,13 @@
         <div id="gameRoot">
             <header>
                 <div id="singleHeader">
-                    <div>Score: <span id="score">0</span></div>
-                    <div id="timer">30</div>
+                    <h3>Score: <span id="score">0</span></h3>
+                    <h3 id="timer1">30</h3>
                 </div>
                 <div id="twoHeader">
-                    <div>Player 1: <span id="p1Score">0</span></div>
-                    <div id="timer">15</div>
-                    <div>Player 2: <span id="p2Score">0</span></div>
+                    <h3>Player 1: <span id="p1Score">0</span></h3>
+                    <h3 id="timer2">999</h3>
+                    <h3>Player 2: <span id="p2Score">0</span></h3>
                 </div>
             </header>
             <main class="game-area">
@@ -65,7 +65,7 @@
                 </div>
             </main>
         </div>
-        <script type="module" src="landing.js"></script>
+        <script src="landing.js"></script>
     </body>
 
 </html>

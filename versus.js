@@ -2,7 +2,7 @@ import { WordSplitGame } from './single.js';
 await WordSplitGame.loadWordList();
 
 const grid = document.getElementById('grid');
-const timer = document.getElementById('timer');
+const timer = document.getElementById('timer2');
 const msg = document.getElementById('message');
 
 const p1Btn = document.getElementById('p1Accept');
@@ -53,6 +53,7 @@ function playerAccepts(playerIdx) {
 }
 
 function startTurnTimer() {
+    console.log("starting timer");
     let t = 15;
     timer.textContent = t;
     clearInterval(turnTimerId);
@@ -93,8 +94,8 @@ function enableAcceptBtns(enable) {
 }
 
 function updateScoreUI() {
-    p1UI.textContent = `Player 1: ${scores[0]}`;
-    p2UI.textContent = `Player 2: ${scores[1]}`;
+    p1UI.textContent = `${scores[0]}`;
+    p2UI.textContent = `${scores[1]}`;
 }
 
 /* ----------  Difficulty helper  ---------- */

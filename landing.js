@@ -15,16 +15,21 @@ function startTwo() {
 
 /* ─── Single Player ─── */
 singleBtn.addEventListener('click', async () => {
-    startSingle();
+    // 1️⃣ Hide landing & show the single‐player layout
+    landing.classList.add('hidden');
+    gameRoot.classList.add('single');
+
+    // 2️⃣ Load the core engine
     const { WordSplitGame } = await import('./single.js');
-    // ensure the word list is loaded
     await WordSplitGame.loadWordList();
 
+    // 3️⃣ Grab your DOM refs
     const grid = document.getElementById('grid');
     const score = document.getElementById('score');
-    const timer = document.querySelector('#singleHeader #timer');
+    const timer = document.querySelector('#singleHeader #timer1');
     const message = document.getElementById('message');
 
+    // 4️⃣ Instantiate the game (same callback you already have)
     const game = new WordSplitGame({
         gridEl: grid,
         scoreEl: score,
@@ -33,8 +38,8 @@ singleBtn.addEventListener('click', async () => {
         onRoundEnd({ won, reason }) {
             if (!won) {
                 message.innerHTML = `
-  <p>${reason === 'time' ? 'Time’s up!' : 'Incorrect match!'}</p>
-  <button id="playAgain">Play again</button>`;
+            <p>${reason === 'time' ? 'Time’s up!' : 'Incorrect match!'}</p>
+            <button id="playAgain">Play again</button>`;
                 document.getElementById('playAgain')
                     .addEventListener('click', () => {
                         message.innerHTML = '';
@@ -46,15 +51,9 @@ singleBtn.addEventListener('click', async () => {
         }
     });
 
-    // show the intro + Start button
-    message.innerHTML = `
-<p>Match ${WordSplitGame.WORDS_PER_ROUND} words in ${WordSplitGame.ROUND_TIME}s.</p>
-<button id="beginGame">Start Game</button>`;
-    document.getElementById('beginGame')
-        .addEventListener('click', () => {
-            message.innerHTML = '';
-            game.startNewRound();
-        }, { once: true });
+    // 5️⃣ Right here—kick off the very first round immediately
+    message.innerHTML = '';           // clear any intro text
+    game.startNewRound();
 });
 
 /* ─── Two-Player ─── */

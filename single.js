@@ -259,7 +259,7 @@ if (typeof window !== 'undefined') {
     window.addEventListener('DOMContentLoaded', async () => {
         const grid = document.getElementById('grid');
         const score = document.getElementById('score');
-        const timer = document.getElementById('timer');
+        const timer = document.getElementById('timer1');
         const msg = document.getElementById('message');
 
         if (!grid) return;   // not a stand-alone page
@@ -292,11 +292,7 @@ if (typeof window !== 'undefined') {
         });
 
         /* first welcome panel */
-        msg.innerHTML = `
-        <p>Welcome to Word Split!</p>
-        <p>Match ${WordSplitGame.WORDS_PER_ROUND} words in ${WordSplitGame.ROUND_TIME}s.<br>
-           Difficulty grows each round.</p>
-        <button id="beginGame">Start Game</button>`;
+        msg.innerHTML = '';
         document.getElementById('beginGame')
             .addEventListener('click', () => {
                 msg.innerHTML = '';
