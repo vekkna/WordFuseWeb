@@ -37,8 +37,9 @@ singleBtn.addEventListener('click', async () => {
         messageEl: message,
         onRoundEnd({ won, reason }) {
             if (!won) {
+                // CHANGE THIS LINE:
                 message.innerHTML = `
-            <p>${reason === 'time' ? 'Time’s up!' : 'Incorrect match!'}</p>
+            <h3>${reason === 'time' ? 'Time’s up!' : 'Incorrect match!'}</h3>
             <button id="playAgain">Play again</button>`;
                 document.getElementById('playAgain')
                     .addEventListener('click', () => {
@@ -49,6 +50,7 @@ singleBtn.addEventListener('click', async () => {
                 setTimeout(() => game.startNewRound(), 800);
             }
         }
+
     });
 
     // 5️⃣ Right here—kick off the very first round immediately

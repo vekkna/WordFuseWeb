@@ -150,13 +150,17 @@ export class WordSplitGame {
 
     _renderGrid() {
         this._clearGrid();
+        const fragment = document.createDocumentFragment(); // Create a fragment
+
         this._halves.forEach(txt => {
             const tile = document.createElement('div');
             tile.className = 'tile';
             tile.textContent = txt;
             tile.addEventListener('click', this._handleTileClick, { passive: true });
-            this.gridEl.appendChild(tile);
+            fragment.appendChild(tile); // Append tile to the fragment
         });
+
+        this.gridEl.appendChild(fragment); // Append the entire fragment at once
     }
 
     _clearGrid() {

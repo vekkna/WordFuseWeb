@@ -323,3 +323,12 @@ header h3 {
         font-size: 1rem;
     }
 }
+
+.message h3 {
+    font-family: var(--font-primary);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-danger);
+    /* Uses the red from your palette */
+    margin-bottom: 1.25rem;
+}
