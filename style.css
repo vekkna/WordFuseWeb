@@ -1,194 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@400;500&display=swap');
+
+:root {
+    --font-primary: 'Merriweather', serif;
+    --font-secondary: 'Montserrat', sans-serif;
+
+    --color-background: #F8F5F2;
+    /* A soft, off-white */
+    --color-text: #3D3D3D;
+    /* A dark, warm grey */
+    --color-primary: #4A5C6A;
+    /* A sophisticated slate blue */
+    --color-primary-light: #6F8695;
+    --color-accent: #D4A373;
+    /* A warm, earthy accent */
+    --color-accent-light: #E7CBA9;
+    --color-success: #588157;
+    --color-danger: #A44A3F;
+    --color-disabled: #BDBDBD;
+
+    --shadow-light: 0 2px 5px rgba(0, 0, 0, 0.05);
+    --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-heavy: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
 html,
 body {
     height: 100%;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font-secondary);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* main will fill the rest of the viewport and center its content */
-.game-area {
-    flex: 1;
-    /* take up all space below the header */
-    display: flex;
-    justify-content: center;
-    /* horizontal centering */
-    align-items: center;
-    /* vertical centering */
-    padding: 0 16px;
-    /* small side-padding on mobile */
-    box-sizing: border-box;
-}
-
-/* Header (Score & Timer) */
-header {
-    background-color: #2c3e50;
-    color: #ecf0f1;
-    padding: 16px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1.2rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-#score,
-#timer {
-    font-weight: 600;
-}
-
-#timer {
-    background-color: #c0392b;
-    padding: 6px 12px;
-    border-radius: 4px;
-}
-
-/* Grid Container */
-#grid {
-    /* remove flex:1; it’s now centered by its parent */
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: minmax(48px, auto);
-    gap: 12px;
-    max-width: 600px;
-    width: 100%;
-    /* fill up to 600px, but shrink on narrow screens */
-    padding: 24px;
-    box-sizing: border-box;
-    margin: 0;
-    /* centering is handled by .game-area */
-}
-
-/* Each Tile */
-.tile {
-    /* ▼ RESET THE DEFAULT BUTTON LOOK  ------------------------- */
-    border: none;
-    /* remove built-in button border */
-    outline: none;
-    /* stop the focus ring overriding your colours */
-    appearance: none;
-    /* Firefox / Safari default button chrome */
-    background: none;
-    /* clear platform default grey */
-    /*▲*/
-    /* ---------------------------------------------------------- */
-
-    background-color: #fff;
-    /* your intended styling */
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.6rem;
-    cursor: pointer;
-    user-select: none;
-    transition: transform 0.1s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-    padding: 1px;
-
-    text-transform: uppercase;
-}
-
-.tile:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Selected State */
-.tile.selected {
-    background-color: #f9e79f;
-    box-shadow: 0 0 0 3px #f1c40f;
-    transform: scale(1.05);
-}
-
-/* Matched (Disabled) State */
-.tile.matched {
-    background-color: #bdc3c7;
-    color: #7f8c8d;
-    cursor: default;
-    box-shadow: none;
-    transform: none;
-}
-
-/* Responsive for Smaller Screens */
-@media (max-width: 600px) {
-    header {
-        font-size: 1rem;
-        padding: 12px 16px;
-    }
-
-    #grid {
-        gap: 8px;
-        padding: 16px;
-    }
-
-    .tile {
-        font-size: 1.3rem;
-        padding: 12px;
-        min-height: 56px;
-    }
-}
-
-/* In-page alerts & buttons */
-.message {
-    text-align: center;
-    margin-bottom: 16px;
-    font-size: 1rem;
-    color: #2c3e50;
-}
-
-.message p {
-    margin: 0 0 12px;
-}
-
-.message button {
-    background-color: #2c3e50;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 16px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color .2s;
-}
-
-.message button:hover {
-    background-color: #1a242f;
-}
-
-/* hide the grid visually while we’re on the start / end screens */
-.game-area.starting #grid,
-.game-area.ended #grid {
-    display: none;
-}
-
-/* ─── helper to hide things ─── */
-.hidden {
-    display: none !important;
-}
-
-/* ─── Landing / Rules Screen ─── */
+/* ─── Landing Screen ─── */
 #landing {
-    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 1rem;
-    background: #f7f7f7;
-    text-align: left;
+    text-align: center;
+    height: 100vh;
+    padding: 2rem;
 }
 
 #landing h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+    font-family: var(--font-primary);
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0;
 }
 
 #landing p {
     font-size: 1.1rem;
+    line-height: 1.7;
+    max-width: 450px;
+    margin: 1rem 0 2.5rem;
+}
+
+.mode-table {
+    border-collapse: collapse;
+    margin-bottom: 3rem;
+    max-width: 500px;
+}
+
+.mode-table td {
+    padding: 1rem;
+    vertical-align: top;
+    text-align: left;
+}
+
+.mode-table td:first-child {
+    font-weight: 500;
+    text-align: right;
+    padding-right: 1.5rem;
+    white-space: nowrap;
+}
+
+.mode-table ul {
+    margin: 0;
+    padding-left: 1.25rem;
     line-height: 1.6;
-    margin: 0 0 2rem;
-    max-width: 360px;
 }
 
 #landing .btn-row {
@@ -197,61 +91,82 @@ header {
 }
 
 #landing .btn-row button {
-    flex: 1 1 140px;
-    padding: 0.75rem 1.25rem;
+    font-family: var(--font-secondary);
+    font-weight: 500;
     font-size: 1rem;
-    border: none;
-    border-radius: 6px;
-    background: #2c3e50;
-    color: #fff;
+    padding: 0.8rem 2rem;
+    border: 2px solid var(--color-primary);
+    border-radius: 8px;
+    background-color: var(--color-primary);
+    color: white;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease-in-out;
 }
 
 #landing .btn-row button:hover {
-    background: #1f2b3a;
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
 }
 
-/* ─── Game Root (hidden until mode select) ─── */
+
+/* ─── Game Root & Header ─── */
 #gameRoot {
     display: none;
-    /* hidden by default */
     height: 100%;
     flex-direction: column;
-    /* header + main stack vertically */
 }
 
-#gameRoot.single {
-    display: flex;
-    /* show single-player layout */
-}
-
+#gameRoot.single,
 #gameRoot.two {
     display: flex;
-    /* show 2-player layout */
 }
 
-/* ─── Headers for single vs two-player ─── */
+header {
+    background-color: transparent;
+    padding: 1.5rem 2rem;
+    box-shadow: none;
+    font-family: var(--font-secondary);
+}
+
 #singleHeader,
 #twoHeader {
     display: none;
     width: 100%;
     justify-content: space-around;
     align-items: center;
-    padding: 1rem 2rem;
-    background: #2c3e50;
-    color: #ecf0f1;
+    color: var(--color-text);
 }
 
-#gameRoot.single #singleHeader {
-    display: flex;
-}
-
+#gameRoot.single #singleHeader,
 #gameRoot.two #twoHeader {
     display: flex;
 }
 
-/* center the grid+message under the header */
+header h3 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+#score,
+#p1Score,
+#p2Score {
+    font-weight: 700;
+    color: var(--color-accent);
+}
+
+#timer1,
+#timer2 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--color-danger);
+    min-width: 50px;
+    text-align: center;
+}
+
+/* ─── Game Area ─── */
 .game-area {
     flex: 1;
     display: flex;
@@ -259,15 +174,96 @@ header {
     justify-content: center;
     align-items: center;
     padding: 0 1rem;
-    box-sizing: border-box;
 }
 
-/* 2-player “Accept” row */
+#grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    width: 100%;
+    max-width: 600px;
+    padding: 1rem;
+}
+
+/* ─── Tiles ─── */
+.tile {
+    border: 1px solid #D1CFCB;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: var(--shadow-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-primary);
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    aspect-ratio: 1.5 / 1;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
+    border-color: var(--color-accent);
+}
+
+.tile.selected {
+    background-color: var(--color-accent-light);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 4px var(--color-accent-light);
+    transform: scale(1.05);
+}
+
+.tile.matched {
+    background-color: #EAEAEA;
+    color: var(--color-disabled);
+    cursor: default;
+    box-shadow: none;
+    transform: none;
+    border-color: #D1CFCB;
+}
+
+/* ─── Messages & In-Game Buttons ─── */
+.message {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    color: var(--color-primary);
+}
+
+.message p,
+.message h2,
+.message h3 {
+    margin: 0 0 1rem;
+}
+
+.message button {
+    font-family: var(--font-secondary);
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.6rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--color-success);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.message button:hover {
+    background-color: #6a9969;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+/* ─── 2-Player Accept Row ─── */
 .accept-row {
     display: none;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     gap: 1rem;
-    justify-content: center;
 }
 
 #gameRoot.two .accept-row {
@@ -275,16 +271,55 @@ header {
 }
 
 .accept-row button {
-    padding: 0.5rem 1rem;
+    font-family: var(--font-secondary);
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
     font-size: 1rem;
     border: none;
-    border-radius: 5px;
-    background: #27ae60;
+    border-radius: 8px;
+    background: var(--color-success);
     color: #fff;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.accept-row button:hover:not(:disabled) {
+    background-color: #6a9969;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
 }
 
 .accept-row button:disabled {
-    opacity: 0.5;
-    cursor: default;
+    background-color: var(--color-disabled);
+    cursor: not-allowed;
+}
+
+
+/* ─── Utility & Responsive ─── */
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 600px) {
+    #landing h1 {
+        font-size: 2.5rem;
+    }
+
+    #grid {
+        gap: 0.75rem;
+        padding: 0.5rem;
+    }
+
+    .tile {
+        font-size: 1.4rem;
+        border-radius: 6px;
+    }
+
+    header {
+        padding: 1rem;
+    }
+
+    header h3 {
+        font-size: 1rem;
+    }
 }

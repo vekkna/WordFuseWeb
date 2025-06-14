@@ -53,7 +53,6 @@ function playerAccepts(playerIdx) {
 }
 
 function startTurnTimer() {
-    console.log("starting timer");
     let t = 15;
     timer.textContent = t;
     clearInterval(turnTimerId);
