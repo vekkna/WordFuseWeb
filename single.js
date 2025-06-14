@@ -15,8 +15,7 @@
  *        })
  *
  *        static loadWordList(url = 'words.txt')  → Promise<void>
- *        startNewRound(poolSizeOverride?, startPaused?)
- *                                              → void
+ *        startNewRound(poolSizeOverride?)        → void
  *        abortRound(reason)                      → void
  *
  *  A “round” ends when:
@@ -113,9 +112,7 @@ export class WordSplitGame {
     startTimer(startingTime) {
         this._remainingTime = startingTime;
         this._updateTimerUI();
-        if (!startPaused) {
-            this._timerId = setInterval(() => this._tick(), 1000);
-        }
+        this._timerId = setInterval(() => this._tick(), 1000);
     }
 
     /** Call if an external controller needs to force-fail the round */

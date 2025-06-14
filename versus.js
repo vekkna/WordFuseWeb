@@ -61,7 +61,7 @@ function startTurnTimer() {
         timer.textContent = --t;
         if (t === 0) {
             clearInterval(turnTimerId);
-            game.abortRound('time');                    // let engine handle end
+            handleRoundEnd(false);                      // ran out of time
         }
     }, 1000);
 }
