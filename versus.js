@@ -95,7 +95,7 @@ function handleRoundEnd(activePlayerSolved) {
         msg.innerHTML = `<h2>Player ${winner + 1} wins the match!</h2>
                      <br><button id="newMatch">Back</button>`;
         document.getElementById('newMatch')
-            .addEventListener('click', () => window.location.href = '/index.html');
+            .addEventListener('click', () => window.location.reload());
     } else {
         msg.innerHTML = `<h3>Player ${winner + 1} scores a point!</h3>
             <button id="nextRound">Next round</button>`;

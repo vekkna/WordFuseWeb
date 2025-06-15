@@ -43,7 +43,7 @@ singleBtn.addEventListener('click', async () => {
             <button id="playAgain">Back</button>`;
                 document.getElementById('playAgain')
                     .addEventListener('click', () => {
-                        window.location.href = '/index.html';
+                        window.location.reload();
                     }, { once: true });
             } else {
                 setTimeout(() => game.startNewRound(), 800);
