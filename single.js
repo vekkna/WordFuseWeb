@@ -27,6 +27,9 @@
 export class WordSplitGame {
     /* ─────────────────────────────────────────── constants (tweak freely) */
     static WORDS_FILE = 'words.txt';
+    static WORDS_STORAGE_KEY = 'wordSplitWordList';
+    static WORDS_VERSION_KEY = 'wordSplitWordListVersion';
+    static CURRENT_WORDS_VERSION = '1.0';
     static WORDS_PER_ROUND = 6;
     static ROUND_TIME = 60;      // seconds
     static POOL_INCREMENT = 500;
@@ -74,11 +77,52 @@ export class WordSplitGame {
 
     /* ─────────────────────────────────────────── static word loader */
     static async loadWordList(url = WordSplitGame.WORDS_FILE) {
-        if (WordSplitGame._allWords.length) return;          // already cached
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`Couldn’t fetch ${url} – ${res.status}`);
-        const txt = await res.text();
-        WordSplitGame._allWords = txt.trim().split('\n');    // assume LF endings
+        if (WordSplitGame._allWords.length > 0) {
+            return; // Already populated
+        }
+
+        try {
+            const storedVersion = localStorage.getItem(WordSplitGame.WORDS_VERSION_KEY);
+            const storedWordsJson = localStorage.getItem(WordSplitGame.WORDS_STORAGE_KEY);
+
+            if (storedVersion === WordSplitGame.CURRENT_WORDS_VERSION && storedWordsJson) {
+                try {
+                    const parsedWords = JSON.parse(storedWordsJson);
+                    if (parsedWords && parsedWords.length > 0) {
+                        WordSplitGame._allWords = parsedWords;
+                        console.log('Word list loaded from localStorage cache.');
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('Failed to parse cached word list, fetching from file.', e);
+                    // Proceed to fetch from file
+                }
+            }
+        } catch (e) {
+            console.warn('Could not access localStorage for word list, fetching from file.', e);
+            // Proceed to fetch from file
+        }
+
+        // If words were not loaded from cache
+        try {
+            const res = await fetch(url);
+            if (!res.ok) {
+                throw new Error(`Couldn’t fetch ${url} – ${res.status} ${res.statusText}`);
+            }
+            const txt = await res.text();
+            WordSplitGame._allWords = txt.trim().split('\n'); // assume LF endings
+
+            try {
+                localStorage.setItem(WordSplitGame.WORDS_VERSION_KEY, WordSplitGame.CURRENT_WORDS_VERSION);
+                localStorage.setItem(WordSplitGame.WORDS_STORAGE_KEY, JSON.stringify(WordSplitGame._allWords));
+                console.log('Word list fetched from file and cached in localStorage.');
+            } catch (e) {
+                console.warn('Failed to cache word list in localStorage. Game will continue, but words will be fetched next time.', e);
+            }
+        } catch (fetchError) {
+            console.error('Fatal error: Could not load word list.', fetchError);
+            throw fetchError; // Re-throw if the game cannot function without words
+        }
     }
 
 
@@ -140,15 +184,18 @@ export class WordSplitGame {
 
     /* ─────────────────────────────────────────── internal helpers */
     _pickWords() {
-        const pool = WordSplitGame._allWords.slice(
-            0,
-            Math.min(this._currentPoolSize, WordSplitGame._allWords.length)
-        );
-        const copy = [...pool];
+        const effectivePoolSize = Math.min(this._currentPoolSize, WordSplitGame._allWords.length);
+        // Create a working copy of the relevant part of the word list
+        const wordPoolCopy = WordSplitGame._allWords.slice(0, effectivePoolSize);
+
         const chosen = [];
-        while (chosen.length < WordSplitGame.WORDS_PER_ROUND && copy.length) {
-            const idx = Math.floor(Math.random() * copy.length);
-            chosen.push(...copy.splice(idx, 1));
+        // Ensure we don't try to pick more words than available
+        const numWordsToChoose = Math.min(WordSplitGame.WORDS_PER_ROUND, wordPoolCopy.length);
+
+        // Check wordPoolCopy.length to prevent infinite loop if WORDS_PER_ROUND is too high for the available pool
+        while (chosen.length < numWordsToChoose && wordPoolCopy.length > 0) {
+            const idx = Math.floor(Math.random() * wordPoolCopy.length);
+            chosen.push(wordPoolCopy.splice(idx, 1)[0]); // splice returns an array, so take the first element
         }
         return chosen;
     }
