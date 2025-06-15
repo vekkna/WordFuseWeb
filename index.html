@@ -1,71 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Word Split</title>
-        <link rel="stylesheet" href="style.css" />
-    </head>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Word Split</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
 
-    <body>
-        <!-- ─── Landing Screen ─── -->
-        <section id="landing">
-            <h1>Word Split</h1>
-            <p>Each 8-letter word is split in half. <br>Select two halves to reassemble a valid word. </p>
-            <table class="mode-table">
-                <tbody>
-                    <tr>
-                        <td><strong>Single Player</strong></td>
-                        <td>
-                            <ul>
-                                <li>Each level, match 6 words in 30 seconds.</li>
-                                <li>Clear as many levels as you can.</li>
-                                <li>Words getter harder each level.</li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>2-Player</strong></td>
-                        <td>
-                            <ul>
-                                <li>Study the grid.</li>
-                                <li>First player to accept has 10s to clear it.</li>
-                                <li>Succeed and score 1 point; fail and your opponent scores 1 .</li>
-                                <li>Score 3 points to win the match.</li>
-                            </ul>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="btn-row">
-                <button id="singleBtn">Single Player</button>
-                <button id="twoBtn">2-Player</button>
-            </div>
-        </section>
-        <!-- ─── Game Area (after selection) ─── -->
-        <div id="gameRoot">
-            <header>
-                <div id="singleHeader">
-                    <h3>Score: <span id="score">0</span></h3>
-                    <h3 id="timer1">888</h3>
-                </div>
-                <div id="twoHeader">
-                    <h3>Player One: <span id="p1Score">0</span></h3>
-                    <h3 id="timer2">999</h3>
-                    <h3>Player Two: <span id="p2Score">0</span></h3>
-                </div>
-            </header>
-            <main class="game-area">
-                <div id="message" class="message"></div>
-                <div id="grid"></div>
-                <div class="accept-row">
-                    <button id="p1Accept">P1 Accept</button>
-                    <button id="p2Accept">P2 Accept</button>
-                </div>
-            </main>
+<body>
+    <!-- ─── Landing Screen ─── -->
+    <section id="landing">
+        <h1>Word Split</h1>
+        <p>8-letter words are halved. <br>Select two halves to find a valid word.</p>
+        <table class="mode-table">
+            <tbody>
+                <tr>
+                    <td><strong>1-Player</strong></td>
+                    <td>
+                        <ul>
+                            <li>Find all 6 words in 30 seconds.</li>
+                            <li>Clear as many levels as you can.</li>
+                            <li>Words get harder each level.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>2-Player</strong></td>
+                    <td>
+                        <ul>
+                            <li>Study the grid.</li>
+                            <li>First player to accept has 10s to clear it.</li>
+                            <li>Succeed and score 1 point; fail and your opponent does .</li>
+                            <li>Score 3 points to win the match.</li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="btn-row">
+            <button id="singleBtn">1-Player</button>
+            <button id="twoBtn">2-Player</button>
         </div>
-        <script src="landing.js"></script>
-    </body>
+    </section>
+    <!-- ─── Game Area (after selection) ─── -->
+    <div id="gameRoot">
+        <header>
+            <div id="singleHeader">
+                <h3>Score: <span id="score">0</span></h3>
+                <h3 id="timer1">30</h3>
+            </div>
+            <div id="twoHeader">
+                <h3>Player One: <span id="p1Score">0</span></h3>
+                <h3 id="timer2">10</h3>
+                <h3>Player Two: <span id="p2Score">0</span></h3>
+            </div>
+        </header>
+        <main class="game-area">
+            <div id="message" class="message"></div>
+            <div id="grid"></div>
+            <div class="accept-row">
+                <button id="p1Accept">P1 Accept</button>
+                <button id="p2Accept">P2 Accept</button>
+            </div>
+        </main>
+    </div>
+    <script src="landing.js"></script>
+</body>
 
 </html>
