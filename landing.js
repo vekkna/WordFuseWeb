@@ -40,11 +40,10 @@ singleBtn.addEventListener('click', async () => {
                 // CHANGE THIS LINE:
                 message.innerHTML = `
             <h3>${reason === 'time' ? 'Time’s up!' : 'Incorrect match!'}</h3>
-            <button id="playAgain">Play again</button>`;
+            <button id="playAgain">Back</button>`;
                 document.getElementById('playAgain')
                     .addEventListener('click', () => {
-                        message.innerHTML = '';
-                        game.startNewRound();
+                        window.location.href = '/index.html';
                     }, { once: true });
             } else {
                 setTimeout(() => game.startNewRound(), 800);
