@@ -402,4 +402,12 @@ header h3 {
         white-space: nowrap;
         /* never wrap “2-Player” */
     }
+
+    /* On narrow screens, keep the rule titles flush left */
+    .mode-table td:first-child {
+        text-align: left;
+        /* override the desktop right-align */
+        padding-right: 0.75rem;
+        /* give a little breathing room */
+    }
 }
