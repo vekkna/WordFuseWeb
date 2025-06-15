@@ -130,6 +130,7 @@ export class WordSplitGame {
         this._remainingTime = startingTime;
         this._updateTimerUI();
         this._timerId = setInterval(() => this._tick(), 1000);
+        this.unlockInteraction();
     }
 
     /** Call if an external controller needs to force-fail the round */
