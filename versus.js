@@ -12,6 +12,7 @@ const p2UI = document.getElementById('p2Score');
 
 const scores = [0, 0];      // [P1, P2]
 let active = null;        // 0 or 1 once someone clicks
+let awaitingAccept = false;
 let turnTimerId = null;
 
 const game = new WordSplitGame({
@@ -34,24 +35,42 @@ function startMatch() {
 }
 
 function nextGrid() {
+    // reset turn state
     active = null;
     timer.textContent = '15';
     msg.textContent = 'Click Accept when ready!';
     enableAcceptBtns(true);
+
+    // build the brand-new grid (engine renders, but doesn't start the timer)
     game.startNewRound(getCurrentDifficulty(), false);
+
+    // ── LOCKING ──
+    awaitingAccept = true;        // our local guard
+    game.lockInteraction();       // engine-level lock: tiles won’t react
 }
 
 p1Btn.addEventListener('click', () => playerAccepts(0));
 p2Btn.addEventListener('click', () => playerAccepts(1));
 
+/**
+ * Called when P1 or P2 clicks “Accept.”
+ * Unlocks the grid so that only the chosen player can begin matching.
+ */
 function playerAccepts(playerIdx) {
-    if (active !== null) return;                    // somebody already accepted
+    // ignore duplicate clicks
+    if (awaitingAccept === false || active !== null) return;
+
+    // mark who’s going first
     active = playerIdx;
+
+    // ── UNLOCKING ──
+    awaitingAccept = false;       // clear our local guard
+    game.unlockInteraction();     // engine-level unlock: tiles become clickable
+
     enableAcceptBtns(false);
     msg.textContent = `Player ${playerIdx + 1} is solving…`;
     startTurnTimer();
 }
-
 function startTurnTimer() {
     let t = 15;
     timer.textContent = t;

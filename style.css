@@ -332,3 +332,13 @@ header h3 {
     /* Uses the red from your palette */
     margin-bottom: 1.25rem;
 }
+
+/* ─── 2-player: grid locked until someone accepts ─── */
+#grid.locked .tile {
+    pointer-events: none;
+    /* ignore clicks      */
+    opacity: .55;
+    /* faint greyed-out   */
+    filter: grayscale(60%);
+    transition: opacity .2s;
+}

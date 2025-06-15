@@ -66,8 +66,10 @@ export class WordSplitGame {
         this._remainingTime = WordSplitGame.ROUND_TIME;
         this._timerId = null;
 
+        this._interactionLocked = false;
         /* convenience bind */
         this._handleTileClick = this._handleTileClick.bind(this);
+
     }
 
     /* ─────────────────────────────────────────── static word loader */
@@ -77,6 +79,21 @@ export class WordSplitGame {
         if (!res.ok) throw new Error(`Couldn’t fetch ${url} – ${res.status}`);
         const txt = await res.text();
         WordSplitGame._allWords = txt.trim().split('\n');    // assume LF endings
+    }
+
+
+    /* ─────────────────── public helpers the host can call ─────────────────── */
+
+    /** Disable every tile click until `unlockInteraction()` is called. */
+    lockInteraction() {
+        this._interactionLocked = true;
+        this.gridEl.classList.add('locked');
+    }
+
+    /** Re-enable tile clicks. */
+    unlockInteraction() {
+        this._interactionLocked = false;
+        this.gridEl.classList.remove('locked');
     }
 
     /* ─────────────────────────────────────────── public API */
@@ -195,6 +212,7 @@ export class WordSplitGame {
 
     /* ─────────────────────────────────────────── click handling */
     _handleTileClick(ev) {
+        if (this._interactionLocked) return;
         const tile = ev.currentTarget;
         if (tile.classList.contains('matched')) return;   // already done
 
@@ -238,10 +256,7 @@ export class WordSplitGame {
         this._clearTimer();
         this._resetSelections();
 
-        /* detach all click handlers to freeze grid */
-        Array.from(this.gridEl.children).forEach(el =>
-            el.replaceWith(el.cloneNode(true))
-        );
+        this.lockInteraction();
 
         if (playerWon) {
             /* made it: ramp difficulty for next caller-initiated round */
