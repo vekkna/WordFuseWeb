@@ -37,7 +37,7 @@ function startMatch() {
 function nextGrid() {
     // reset turn state
     active = null;
-    timer.textContent = '15';
+    timer.textContent = '10';
     msg.textContent = 'Click Accept when ready!';
     enableAcceptBtns(true);
 
@@ -72,7 +72,7 @@ function playerAccepts(playerIdx) {
     startTurnTimer();
 }
 function startTurnTimer() {
-    let t = 15;
+    let t = 10;
     timer.textContent = t;
     clearInterval(turnTimerId);
     turnTimerId = setInterval(() => {

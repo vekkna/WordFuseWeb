@@ -81,8 +81,9 @@ body {
 
 .mode-table ul {
     margin: 0;
-    padding-left: 1.25rem;
+    padding-left: 0.5rem;
     line-height: 1.6;
+    margin-bottom: 1rem;
 }
 
 #landing .btn-row {
