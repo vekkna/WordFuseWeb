@@ -1,15 +1,15 @@
 const CACHE_NAME = "game-cache-v1";
 const FILES_TO_CACHE = [
-    "/",
-    "/index.html",
-    "/style.css",
-    "/landing.js",
-    "/single.js",
-    "/versus.js",
-    "/manifest.json",
-    "/words.txt",
-    "/icons/icon-192.png",
-    "/icons/icon-512.png"
+    "/WordFuseWeb/",
+    "/WordFuseWeb/index.html",
+    "/WordFuseWeb/style.css",
+    "/WordFuseWeb/landing.js",
+    "/WordFuseWeb/single.js",
+    "/WordFuseWeb/versus.js",
+    "/WordFuseWeb/manifest.json",
+    "/WordFuseWeb/words.txt",
+    "/WordFuseWeb/icons/icon-192.png",
+    "/WordFuseWeb/icons/icon-512.png"
 ];
 
 self.addEventListener("install", event => {
