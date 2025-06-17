@@ -32,7 +32,7 @@ export class WordSplitGame {
     static CURRENT_WORDS_VERSION = '1.0';
     static WORDS_PER_ROUND = 6;
     static ROUND_TIME = 60;      // seconds
-    static POOL_INCREMENT = 500;
+    static POOL_INCREMENT = 300;
     static MAX_POOL_SIZE = 10000;
 
     /* the shared word list, loaded once per browser session */
