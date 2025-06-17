@@ -66,3 +66,11 @@ twoBtn.addEventListener('click', async () => {
     // now load versus logic which picks up the DOM you already have
     await import('./versus.js');
 });
+
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/service-worker.js")
+            .then(reg => console.log("SW registered:", reg.scope))
+            .catch(err => console.error("SW registration failed:", err));
+    });
+}
