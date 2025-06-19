@@ -13,23 +13,18 @@ function startTwo() {
     gameRoot.classList.add('two');
 }
 
-/* ─── Single Player ─── */
 singleBtn.addEventListener('click', async () => {
-    // 1️⃣ Hide landing & show the single‐player layout
     landing.classList.add('hidden');
     gameRoot.classList.add('single');
 
-    // 2️⃣ Load the core engine
     const { WordSplitGame } = await import('./single.js');
     await WordSplitGame.loadWordList();
 
-    // 3️⃣ Grab your DOM refs
     const grid = document.getElementById('grid');
     const score = document.getElementById('score');
     const timer = document.querySelector('#singleHeader #timer1');
     const message = document.getElementById('message');
 
-    // 4️⃣ Instantiate the game (same callback you already have)
     const game = new WordSplitGame({
         gridEl: grid,
         scoreEl: score,
@@ -37,7 +32,6 @@ singleBtn.addEventListener('click', async () => {
         messageEl: message,
         onRoundEnd({ won, reason }) {
             if (!won) {
-                // CHANGE THIS LINE:
                 message.innerHTML = `
             <h3>${reason === 'time' ? 'Time’s up!' : 'Incorrect match!'}</h3>
             <button id="playAgain">Back</button>`;
@@ -52,18 +46,16 @@ singleBtn.addEventListener('click', async () => {
 
     });
 
-    // 5️⃣ Right here—kick off the very first round immediately
-    message.innerHTML = '';           // clear any intro text
+    message.innerHTML = '';
     game.startNewRound();
 });
 
-/* ─── Two-Player ─── */
+
 twoBtn.addEventListener('click', async () => {
     startTwo();
     const { WordSplitGame } = await import('./single.js');
     await WordSplitGame.loadWordList();
 
-    // now load versus logic which picks up the DOM you already have
     await import('./versus.js');
 });
 

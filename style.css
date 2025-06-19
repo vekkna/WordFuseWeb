@@ -4,14 +4,12 @@
     --font-primary: 'Inter', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 
-    /* Modern Dark Theme */
     --color-background: #0a0b0d;
     --color-surface: #1a1d23;
     --color-surface-light: #242832;
     --color-text: #e8eaed;
     --color-text-muted: #9aa0a6;
 
-    /* Vibrant Accent Colors */
     --color-primary: #6366f1;
     --color-primary-light: #818cf8;
     --color-primary-dark: #4f46e5;
@@ -21,17 +19,17 @@
     --color-danger: #ef4444;
     --color-warning: #f59e0b;
 
-    /* Glass Effect */
+
     --glass-bg: rgba(255, 255, 255, 0.05);
     --glass-border: rgba(255, 255, 255, 0.1);
 
-    /* Shadows & Effects */
+
     --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
     --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.3);
     --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.4);
     --shadow-heavy: 0 20px 60px rgba(0, 0, 0, 0.5);
 
-    /* Gradients */
+
     --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
     --gradient-accent: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
     --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
@@ -50,7 +48,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Background Animation */
 body::before {
     content: '';
     position: fixed;
@@ -79,7 +76,6 @@ body::before {
     }
 }
 
-/* ─── Landing Screen ─── */
 #landing {
     display: flex;
     flex-direction: column;
@@ -207,7 +203,6 @@ body::before {
     transform: translateY(0) scale(0.98);
 }
 
-/* ─── Game Root & Header ─── */
 #gameRoot {
     display: none;
     height: 100%;
@@ -280,7 +275,6 @@ header h3 {
     }
 }
 
-/* ─── Game Area ─── */
 .game-area {
     flex: 1;
     display: flex;
@@ -299,7 +293,6 @@ header h3 {
     padding: 2rem;
 }
 
-/* ─── Tiles ─── */
 .tile {
     border: 2px solid var(--glass-border);
     background: var(--glass-bg);
@@ -388,7 +381,6 @@ header h3 {
     }
 }
 
-/* ─── Messages & In-Game Buttons ─── */
 .message {
     text-align: center;
     margin-bottom: 2rem;
@@ -402,7 +394,6 @@ header h3 {
     box-shadow: var(--shadow-light);
 }
 
-/* Hide message when empty */
 .message:empty {
     display: none;
 }
@@ -496,7 +487,6 @@ header h3 {
     opacity: 0.5;
 }
 
-/* ─── 2-player: grid locked until someone accepts ─── */
 #grid.locked .tile {
     pointer-events: none;
     opacity: 0.6;
@@ -504,7 +494,6 @@ header h3 {
     transition: all 0.3s ease;
 }
 
-/* ─── Utility & Responsive ─── */
 .hidden {
     display: none !important;
 }
@@ -578,7 +567,6 @@ header h3 {
         font-size: 1.5rem;
     }
 
-    /* Mobile tweaks for #landing - Make it fit in viewport */
     #landing {
         padding: 1rem;
         height: 100vh;

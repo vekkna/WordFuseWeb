@@ -10,16 +10,16 @@ const p2Btn = document.getElementById('p2Accept');
 const p1UI = document.getElementById('p1Score');
 const p2UI = document.getElementById('p2Score');
 
-const scores = [0, 0];      // [P1, P2]
+const scores = [0, 0];
 const time = 15;
 
-let active = null;        // 0 or 1 once someone clicks
+let active = null;
 let awaitingAccept = false;
 let turnTimerId = null;
 
 const game = new WordSplitGame({
     gridEl: grid,
-    scoreEl: { textContent: '' },   // not used in versus
+    scoreEl: { textContent: '' },
     timerEl: timer,
     onRoundEnd: ({ won }) => {
         handleRoundEnd(won);
@@ -28,8 +28,6 @@ const game = new WordSplitGame({
 
 startMatch();
 
-/* ----------  Versus-mode flow  ---------- */
-
 function startMatch() {
     scores[0] = scores[1] = 0;
     updateScoreUI();
@@ -37,37 +35,27 @@ function startMatch() {
 }
 
 function nextGrid() {
-    // reset turn state
     active = null;
     timer.textContent = time.toString();
     msg.textContent = 'Click Accept when ready!';
     enableAcceptBtns(true);
 
-    // build the brand-new grid (engine renders, but doesn't start the timer)
     game.startNewRound(getCurrentDifficulty(), false);
 
-    // ── LOCKING ──
-    awaitingAccept = true;        // our local guard
-    game.lockInteraction();       // engine-level lock: tiles won’t react
+    awaitingAccept = true;
+    game.lockInteraction();
 }
 
 p1Btn.addEventListener('click', () => playerAccepts(0));
 p2Btn.addEventListener('click', () => playerAccepts(1));
 
-/**
- * Called when P1 or P2 clicks “Accept.”
- * Unlocks the grid so that only the chosen player can begin matching.
- */
 function playerAccepts(playerIdx) {
-    // ignore duplicate clicks
     if (awaitingAccept === false || active !== null) return;
 
-    // mark who’s going first
     active = playerIdx;
 
-    // ── UNLOCKING ──
-    awaitingAccept = false;       // clear our local guard
-    game.unlockInteraction();     // engine-level unlock: tiles become clickable
+    awaitingAccept = false;
+    game.unlockInteraction();
 
     enableAcceptBtns(false);
     msg.textContent = `Player ${playerIdx + 1} is solving…`;
@@ -81,7 +69,7 @@ function startTurnTimer() {
         timer.textContent = --t;
         if (t === 0) {
             clearInterval(turnTimerId);
-            handleRoundEnd(false);                      // ran out of time
+            handleRoundEnd(false);
         }
     }, 1000);
 }
@@ -118,11 +106,7 @@ function updateScoreUI() {
     p2UI.textContent = `${scores[1]}`;
 }
 
-/* ----------  Difficulty helper  ---------- */
-
 function getCurrentDifficulty() {
-    // The _losing_ player’s score is min(scores), so difficulty is inversely
-    // linked to it.  Example strategy: currentPoolSize = 500 + losing*500
     const losingScore = Math.min(...scores);
-    return 1000 + losingScore * 1000;      // tweak however you like
+    return 1000 + losingScore * 1000;
 }

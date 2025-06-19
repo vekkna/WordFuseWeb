@@ -1,31 +1,4 @@
-/* single.js ─ Core engine for the Word-Split game
- *
- *  ▸  Can run stand-alone in “classic” single-player mode
- *  ▸  Or be imported by another script (e.g. versus.js) that
- *     controls flow, scoring, timers, difficulty, etc.
- *
- *  Public surface:
- *    ─ class WordSplitGame
- *        constructor({
- *          gridEl,          // <div id="grid">        ─ required
- *          scoreEl,         // <span id="score">      ─ optional
- *          timerEl,         // <span id="timer">      ─ optional
- *          messageEl,       // <div id="message">     ─ optional
- *          onRoundEnd       // fn({ won, reason })    ─ optional
- *        })
- *
- *        static loadWordList(url = 'words.txt')  → Promise<void>
- *        startNewRound(poolSizeOverride?)        → void
- *        abortRound(reason)                      → void
- *
- *  A “round” ends when:
- *    • player matches all WORDS_PER_ROUND correctly   → onRoundEnd({won:true})
- *    • timer hits zero                                → onRoundEnd({won:false, reason:'time'})
- *    • incorrect pair chosen                          → onRoundEnd({won:false, reason:'wrong'})
- */
-
 export class WordSplitGame {
-    /* ─────────────────────────────────────────── constants (tweak freely) */
     static WORDS_FILE = 'words.txt';
     static WORDS_STORAGE_KEY = 'wordSplitWordList';
     static WORDS_VERSION_KEY = 'wordSplitWordListVersion';
@@ -35,10 +8,8 @@ export class WordSplitGame {
     static POOL_INCREMENT = 300;
     static MAX_POOL_SIZE = 10000;
 
-    /* the shared word list, loaded once per browser session */
     static _allWords = [];
 
-    /* ─────────────────────────────────────────── constructor */
     constructor({
         gridEl,
         scoreEl = null,
@@ -48,20 +19,16 @@ export class WordSplitGame {
     }) {
         if (!gridEl) throw new Error('WordSplitGame needs a gridEl');
 
-        /* DOM refs */
         this.gridEl = gridEl;
         this.scoreEl = scoreEl;
         this.timerEl = timerEl;
         this.messageEl = messageEl;
 
-        /* callbacks */
         this.onRoundEnd = onRoundEnd;
 
-        /* per-match state */
         this._currentPoolSize = 500;
         this._totalScore = 0;
 
-        /* per-round state */
         this._roundMatches = 0;
         this._wordsSet = [];
         this._halves = [];
@@ -70,15 +37,12 @@ export class WordSplitGame {
         this._timerId = null;
 
         this._interactionLocked = false;
-        /* convenience bind */
         this._handleTileClick = this._handleTileClick.bind(this);
-
     }
 
-    /* ─────────────────────────────────────────── static word loader */
     static async loadWordList(url = WordSplitGame.WORDS_FILE) {
         if (WordSplitGame._allWords.length > 0) {
-            return; // Already populated
+            return;
         }
 
         try {
@@ -95,22 +59,19 @@ export class WordSplitGame {
                     }
                 } catch (e) {
                     console.warn('Failed to parse cached word list, fetching from file.', e);
-                    // Proceed to fetch from file
                 }
             }
         } catch (e) {
             console.warn('Could not access localStorage for word list, fetching from file.', e);
-            // Proceed to fetch from file
         }
 
-        // If words were not loaded from cache
         try {
             const res = await fetch(url);
             if (!res.ok) {
                 throw new Error(`Couldn’t fetch ${url} – ${res.status} ${res.statusText}`);
             }
             const txt = await res.text();
-            WordSplitGame._allWords = txt.trim().split('\n'); // assume LF endings
+            WordSplitGame._allWords = txt.trim().split('\n');
 
             try {
                 localStorage.setItem(WordSplitGame.WORDS_VERSION_KEY, WordSplitGame.CURRENT_WORDS_VERSION);
@@ -121,36 +82,26 @@ export class WordSplitGame {
             }
         } catch (fetchError) {
             console.error('Fatal error: Could not load word list.', fetchError);
-            throw fetchError; // Re-throw if the game cannot function without words
+            throw fetchError;
         }
     }
 
-
-    /* ─────────────────── public helpers the host can call ─────────────────── */
-
-    /** Disable every tile click until `unlockInteraction()` is called. */
     lockInteraction() {
         this._interactionLocked = true;
         this.gridEl.classList.add('locked');
     }
 
-    /** Re-enable tile clicks. */
     unlockInteraction() {
         this._interactionLocked = false;
         this.gridEl.classList.remove('locked');
     }
 
-    /* ─────────────────────────────────────────── public API */
     startNewRound(poolSizeOverride, startNow = true) {
-        /* stop any previous activity */
         this._clearTimer();
         this._clearGrid();
         this._resetSelections();
         this._roundMatches = 0;
 
-
-
-        /* pick pool size */
         if (typeof poolSizeOverride === 'number') {
             this._currentPoolSize = Math.min(
                 poolSizeOverride,
@@ -158,13 +109,11 @@ export class WordSplitGame {
             );
         }
 
-        /* choose words & build grid */
         this._wordsSet = this._pickWords();
         this._halves = this._splitHalves(this._wordsSet);
         this._shuffle(this._halves);
         this._renderGrid();
 
-        /* count-down */
         if (startNow) {
             this.startTimer(30)
         }
@@ -177,25 +126,22 @@ export class WordSplitGame {
         this.unlockInteraction();
     }
 
-    /** Call if an external controller needs to force-fail the round */
     abortRound(reason = 'abort') {
         this._roundComplete(false, reason);
     }
 
-    /* ─────────────────────────────────────────── internal helpers */
     _pickWords() {
         const effectivePoolSize = Math.min(this._currentPoolSize, WordSplitGame._allWords.length);
-        // Create a working copy of the relevant part of the word list
+
         const wordPoolCopy = WordSplitGame._allWords.slice(0, effectivePoolSize);
 
         const chosen = [];
-        // Ensure we don't try to pick more words than available
+
         const numWordsToChoose = Math.min(WordSplitGame.WORDS_PER_ROUND, wordPoolCopy.length);
 
-        // Check wordPoolCopy.length to prevent infinite loop if WORDS_PER_ROUND is too high for the available pool
         while (chosen.length < numWordsToChoose && wordPoolCopy.length > 0) {
             const idx = Math.floor(Math.random() * wordPoolCopy.length);
-            chosen.push(wordPoolCopy.splice(idx, 1)[0]); // splice returns an array, so take the first element
+            chosen.push(wordPoolCopy.splice(idx, 1)[0]);
         }
         return chosen;
     }
@@ -215,17 +161,17 @@ export class WordSplitGame {
 
     _renderGrid() {
         this._clearGrid();
-        const fragment = document.createDocumentFragment(); // Create a fragment
+        const fragment = document.createDocumentFragment();
 
         this._halves.forEach(txt => {
             const tile = document.createElement('div');
             tile.className = 'tile';
             tile.textContent = txt;
             tile.addEventListener('click', this._handleTileClick, { passive: true });
-            fragment.appendChild(tile); // Append tile to the fragment
+            fragment.appendChild(tile);
         });
 
-        this.gridEl.appendChild(fragment); // Append the entire fragment at once
+        this.gridEl.appendChild(fragment);
     }
 
     _clearGrid() {
@@ -258,32 +204,28 @@ export class WordSplitGame {
         }
     }
 
-    /* ─────────────────────────────────────────── click handling */
     _handleTileClick(ev) {
         if (this._interactionLocked) return;
         const tile = ev.currentTarget;
-        if (tile.classList.contains('matched')) return;   // already done
+        if (tile.classList.contains('matched')) return;
 
-        /* first selection */
         if (!this._selectedTile) {
             this._selectedTile = tile;
             tile.classList.add('selected');
             return;
         }
 
-        /* deselecting same tile */
+
         if (tile === this._selectedTile) {
             this._resetSelections();
             return;
         }
 
-        /* attempt match */
         const candidate = this._selectedTile.textContent + tile.textContent;
         if (this._wordsSet.includes(candidate)) {
             this._selectedTile.classList.remove('selected');
             this._selectedTile.classList.add('matched');
             tile.classList.add('matched');
-
 
             this._roundMatches++;
             this._updateScoreUI();
@@ -299,7 +241,6 @@ export class WordSplitGame {
         }
     }
 
-    /* ─────────────────────────────────────────── end-of-round logic */
     _roundComplete(playerWon, reason = 'complete') {
         this._clearTimer();
         this._resetSelections();
@@ -307,7 +248,6 @@ export class WordSplitGame {
         this.lockInteraction();
 
         if (playerWon) {
-            /* made it: ramp difficulty for next caller-initiated round */
             this._increaseDifficulty();
         }
 
