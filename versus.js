@@ -11,6 +11,8 @@ const p1UI = document.getElementById('p1Score');
 const p2UI = document.getElementById('p2Score');
 
 const scores = [0, 0];      // [P1, P2]
+const time = 15;
+
 let active = null;        // 0 or 1 once someone clicks
 let awaitingAccept = false;
 let turnTimerId = null;
@@ -37,7 +39,7 @@ function startMatch() {
 function nextGrid() {
     // reset turn state
     active = null;
-    timer.textContent = '10';
+    timer.textContent = time.toString();
     msg.textContent = 'Click Accept when ready!';
     enableAcceptBtns(true);
 
@@ -72,7 +74,7 @@ function playerAccepts(playerIdx) {
     startTurnTimer();
 }
 function startTurnTimer() {
-    let t = 10;
+    let t = time;
     timer.textContent = t;
     clearInterval(turnTimerId);
     turnTimerId = setInterval(() => {
