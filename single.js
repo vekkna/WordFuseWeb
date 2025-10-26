@@ -4,8 +4,8 @@ export class WordSplitGame {
     static WORDS_VERSION_KEY = 'wordSplitWordListVersion';
     static CURRENT_WORDS_VERSION = '1.0';
     static WORDS_PER_ROUND = 6;
-    static ROUND_TIME = 60;      // seconds
-    static POOL_INCREMENT = 300;
+    static ROUND_TIME = 60;
+    static POOL_INCREMENT = 150;
     static MAX_POOL_SIZE = 10000;
 
     static _allWords = [];
@@ -26,7 +26,7 @@ export class WordSplitGame {
 
         this.onRoundEnd = onRoundEnd;
 
-        this._currentPoolSize = 500;
+        this._currentPoolSize = 200;
         this._totalScore = 0;
 
         this._roundMatches = 0;
