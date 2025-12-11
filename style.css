@@ -36,6 +36,8 @@ body {
     color: var(--color-text);
     overflow-x: hidden;
     line-height: 1.6;
+    -webkit-text-size-adjust: 100%;
+    /* Prevent font scaling in landscape */
 }
 
 /* Add subtle paper texture */
@@ -59,56 +61,74 @@ body::before {
     justify-content: center;
     align-items: center;
     text-align: center;
-    height: 100vh;
-    padding: 2rem;
+    min-height: 100vh;
+    /* Changed from height to min-height */
+    padding: clamp(1rem, 4vw, 2rem);
+    /* Responsive padding */
     position: relative;
     background: linear-gradient(180deg, var(--color-background) 0%, #f0ebe0 100%);
+    box-sizing: border-box;
+    overflow-y: auto;
+    /* Allow scrolling if content exceeds */
 }
 
 #landing h1 {
     font-family: var(--font-heading);
-    font-size: 4.5rem;
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    /* Responsive font size */
     font-weight: 700;
     color: var(--color-primary);
-    margin: 0 0 1.5rem;
+    margin: 0 0 clamp(1rem, 3vw, 1.5rem);
     letter-spacing: -0.5px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     position: relative;
+    line-height: 1.2;
+    /* Better line height for mobile */
 }
 
 #landing h1::after {
     content: '';
     position: absolute;
-    bottom: -10px;
+    bottom: -0.5rem;
+    /* Reduced for mobile */
     left: 50%;
     transform: translateX(-50%);
-    width: 120px;
+    width: clamp(80px, 25vw, 120px);
+    /* Responsive width */
     height: 3px;
     background: var(--color-accent);
     border-radius: 2px;
 }
 
 #landing p {
-    font-size: 1.25rem;
-    line-height: 1.8;
-    max-width: 500px;
-    margin: 2rem 0 3rem;
+    font-size: clamp(1rem, 4vw, 1.25rem);
+    /* Responsive font size */
+    line-height: 1.6;
+    /* Reduced for mobile */
+    max-width: min(500px, 90vw);
+    /* Responsive max-width */
+    margin: clamp(1rem, 3vw, 2rem) 0 clamp(1.5rem, 4vw, 3rem);
     color: var(--color-text-muted);
     font-weight: 400;
     font-style: italic;
+    padding: 0 0.5rem;
+    /* Added side padding */
 }
 
 .mode-table {
     border-collapse: separate;
     border-spacing: 0;
-    margin-bottom: 3rem;
-    max-width: 700px;
+    margin: 0 auto clamp(2rem, 5vw, 3rem);
+    max-width: min(700px, 95vw);
+    /* Responsive max-width */
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 0;
     box-shadow: var(--shadow-subtle);
     overflow: hidden;
+    width: 100%;
+    /* Ensure it takes full width on mobile */
 }
 
 .mode-table tbody tr {
@@ -120,7 +140,8 @@ body::before {
 }
 
 .mode-table td {
-    padding: 2rem;
+    padding: clamp(1rem, 3vw, 2rem);
+    /* Responsive padding */
     vertical-align: top;
     text-align: left;
 }
@@ -128,25 +149,28 @@ body::before {
 .mode-table td:first-child {
     font-weight: 600;
     text-align: right;
-    padding-right: 2.5rem;
+    padding-right: clamp(1.5rem, 4vw, 2.5rem);
     white-space: nowrap;
     color: var(--color-accent);
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 3vw, 1.2rem);
     font-family: var(--font-heading);
     background: var(--color-surface-alt);
     border-right: 1px solid var(--color-border);
-    width: 180px;
+    width: clamp(140px, 25vw, 180px);
+    /* Responsive width */
 }
 
 .mode-table ul {
     margin: 0;
     padding-left: 1.2rem;
-    line-height: 1.8;
+    line-height: 1.6;
+    /* Reduced for mobile */
     color: var(--color-text-muted);
 }
 
 .mode-table li {
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.6rem;
+    /* Reduced for mobile */
     position: relative;
 }
 
@@ -156,15 +180,24 @@ body::before {
 
 #landing .btn-row {
     display: flex;
-    gap: 1.5rem;
-    margin-top: 1rem;
+    gap: clamp(0.75rem, 3vw, 1.5rem);
+    margin-top: clamp(0.5rem, 2vw, 1rem);
+    flex-wrap: wrap;
+    /* Allow buttons to wrap on very small screens */
+    justify-content: center;
+    width: 100%;
+    max-width: min(600px, 95vw);
+    /* Limit max width */
+    padding: 0 0.5rem;
 }
 
 #landing .btn-row button {
     font-family: var(--font-ui);
     font-weight: 600;
-    font-size: 1.1rem;
-    padding: 1rem 3rem;
+    font-size: clamp(1rem, 3.5vw, 1.1rem);
+    /* Responsive font size */
+    padding: clamp(0.75rem, 2.5vw, 1rem) clamp(1.5rem, 6vw, 3rem);
+    /* Responsive padding */
     border: 2px solid var(--color-primary);
     border-radius: 6px;
     background: transparent;
@@ -174,6 +207,12 @@ body::before {
     letter-spacing: 0.5px;
     position: relative;
     overflow: hidden;
+    flex: 1;
+    /* Allow buttons to grow/shrink */
+    min-width: min(200px, 80vw);
+    /* Minimum but responsive width */
+    max-width: 300px;
+    /* Maximum width */
 }
 
 #landing .btn-row button:hover {
@@ -202,9 +241,11 @@ body::before {
 header {
     background: var(--color-surface);
     border-bottom: 1px solid var(--color-border);
-    padding: 1.2rem 2rem;
+    padding: clamp(0.75rem, 2vw, 1.2rem) clamp(1rem, 3vw, 2rem);
     font-family: var(--font-ui);
     box-shadow: var(--shadow-subtle);
+    flex-shrink: 0;
+    /* Prevent header from shrinking on mobile */
 }
 
 #singleHeader,
@@ -214,6 +255,8 @@ header {
     justify-content: space-around;
     align-items: center;
     color: var(--color-text);
+    flex-wrap: wrap;
+    /* Allow header items to wrap on small screens */
 }
 
 #gameRoot.single #singleHeader,
@@ -222,7 +265,7 @@ header {
 }
 
 header h3 {
-    font-size: 1.2rem;
+    font-size: clamp(0.9rem, 3vw, 1.2rem);
     font-weight: 500;
     margin: 0;
     color: var(--color-text-muted);
@@ -234,13 +277,13 @@ header h3 {
     font-weight: 700;
     color: var(--color-primary);
     font-family: var(--font-ui);
-    font-size: 1.4rem;
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
 }
 
 #timer1,
 #timer2 {
     font-weight: 700;
-    font-size: 2.2rem;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
     color: var(--color-danger);
     min-width: 60px;
     text-align: center;
@@ -254,20 +297,27 @@ header h3 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 2rem 1rem;
+    padding: clamp(1rem, 3vw, 2rem) 0.5rem;
+    overflow-y: auto;
+    /* Allow scrolling on small screens */
+    min-height: 0;
+    /* Important for flex child scrolling */
 }
 
 #message {
     text-align: center;
-    margin-bottom: 2rem;
-    font-size: 1.3rem;
+    margin-bottom: clamp(1rem, 3vw, 2rem);
+    font-size: clamp(1rem, 3.5vw, 1.3rem);
     color: var(--color-text);
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 6px;
-    padding: 1.5rem 2.5rem;
+    padding: clamp(1rem, 3vw, 1.5rem) clamp(1.5rem, 4vw, 2.5rem);
     box-shadow: var(--shadow-subtle);
-    min-width: 300px;
+    min-width: min(300px, 90vw);
+    /* Responsive min-width */
+    max-width: min(600px, 95vw);
+    width: auto;
 }
 
 #message:empty {
@@ -277,14 +327,15 @@ header h3 {
 #grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1.2rem;
+    gap: clamp(0.6rem, 2vw, 1.2rem);
     width: 100%;
-    max-width: 750px;
-    padding: 2.5rem;
+    max-width: min(750px, 95vw);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 8px;
     box-shadow: var(--shadow-subtle);
+    margin: 0 auto;
 }
 
 .tile {
@@ -295,7 +346,8 @@ header h3 {
     align-items: center;
     justify-content: center;
     font-family: var(--font-heading);
-    font-size: 1.9rem;
+    font-size: clamp(1.3rem, 4vw, 1.9rem);
+    /* Responsive font size */
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -335,8 +387,10 @@ header h3 {
 /* ─── 2-Player Accept Row ─── */
 .accept-row {
     display: none;
-    margin-top: 2.5rem;
-    gap: 2rem;
+    margin-top: clamp(1.5rem, 4vw, 2.5rem);
+    gap: clamp(1rem, 3vw, 2rem);
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 #gameRoot.two .accept-row {
@@ -346,8 +400,8 @@ header h3 {
 .accept-row button {
     font-family: var(--font-ui);
     font-weight: 600;
-    padding: 1rem 2.5rem;
-    font-size: 1.1rem;
+    padding: clamp(0.75rem, 2.5vw, 1rem) clamp(1.5rem, 4vw, 2.5rem);
+    font-size: clamp(1rem, 3vw, 1.1rem);
     border: 2px solid var(--color-primary);
     border-radius: 6px;
     background: transparent;
@@ -355,6 +409,7 @@ header h3 {
     cursor: pointer;
     transition: all 0.3s ease;
     letter-spacing: 0.5px;
+    min-width: min(150px, 40vw);
 }
 
 .accept-row button:hover:not(:disabled) {
@@ -382,26 +437,24 @@ header h3 {
     display: none !important;
 }
 
-/* Responsive adjustments */
+/* Enhanced Responsive adjustments */
 @media (max-width: 600px) {
-    #landing h1 {
-        font-size: 3rem;
-    }
-
-    #landing p {
-        font-size: 1.1rem;
-        margin: 1.5rem 0 2rem;
-        padding: 0 1rem;
+    #landing {
+        padding-top: max(1rem, env(safe-area-inset-top));
+        /* Account for notch */
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+        /* Account for bottom bar */
     }
 
     .mode-table {
-        margin: 0 1rem 2rem;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
     }
 
     .mode-table td {
-        padding: 1.5rem;
         display: block;
         width: 100%;
+        box-sizing: border-box;
     }
 
     .mode-table td:first-child {
@@ -410,41 +463,131 @@ header h3 {
         border-right: none;
         border-bottom: 1px solid var(--color-border);
         background: var(--color-surface);
+        width: 100%;
+        white-space: normal;
+        /* Allow wrapping on mobile */
     }
 
     #landing .btn-row {
         flex-direction: column;
-        gap: 1rem;
+        align-items: center;
+    }
+
+    #landing .btn-row button {
         width: 100%;
         max-width: 300px;
     }
 
     #grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        padding: 1.5rem;
+        /* 2 columns on small mobile */
+        gap: 0.8rem;
+        padding: 1rem;
+    }
+
+    .tile {
+        aspect-ratio: 1.2 / 1;
+        /* Slightly squarer on mobile */
+        font-size: 1.4rem;
+    }
+
+    .accept-row {
+        flex-direction: column;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    header {
+        padding: 0.75rem;
+    }
+
+    header h3 {
+        font-size: 0.9rem;
+        text-align: center;
+        margin-bottom: 0.25rem;
+    }
+
+    #timer1,
+    #timer2 {
+        font-size: 1.6rem;
+    }
+}
+
+/* Extra small devices (phones less than 400px) */
+@media (max-width: 400px) {
+    #landing h1 {
+        font-size: 2rem;
+    }
+
+    #landing p {
+        font-size: 0.95rem;
+    }
+
+    .mode-table td {
+        padding: 1rem 0.75rem;
+    }
+
+    .mode-table td:first-child {
+        font-size: 1rem;
+        padding: 1rem 0.75rem;
+    }
+
+    #grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.6rem;
+        padding: 0.75rem;
+    }
+
+    .tile {
+        font-size: 1.2rem;
+        aspect-ratio: 1.1 / 1;
+    }
+}
+
+/* Tablet adjustments */
+@media (min-width: 601px) and (max-width: 900px) {
+    #grid {
+        grid-template-columns: repeat(3, 1fr);
+        /* 3 columns on tablet */
+        max-width: 90vw;
     }
 
     .tile {
         font-size: 1.6rem;
     }
+}
 
-    .accept-row {
-        flex-direction: column;
-        gap: 1rem;
+/* Landscape orientation adjustments */
+@media (max-height: 700px) and (orientation: landscape) {
+    #landing {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        min-height: auto;
+        justify-content: flex-start;
     }
 
-    header {
+    #landing h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    #landing p {
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .mode-table {
+        margin-bottom: 1.5rem;
+        max-height: 40vh;
+        overflow-y: auto;
+    }
+
+    .mode-table td {
         padding: 1rem;
     }
 
-    header h3 {
-        font-size: 1rem;
-    }
-
-    #timer1,
-    #timer2 {
-        font-size: 1.8rem;
+    #landing .btn-row {
+        margin-top: 0.5rem;
     }
 }
 
@@ -454,5 +597,20 @@ header h3 {
         border: 1px solid #000;
         background: white;
         color: black;
+    }
+}
+
+/* Prevent horizontal scrolling on very small devices */
+@media (max-width: 320px) {
+
+    html,
+    body {
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    #landing {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
     }
 }
