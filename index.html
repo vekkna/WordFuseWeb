@@ -1,76 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Word Fuse</title>
-        <link rel="stylesheet" href="style.css" />
-        <link rel="manifest" href="manifest.json">
-        <meta name="theme-color" content="#000000">
-        <link rel="icon" type="image/png" href="/icons/favicon/favicon-96x96.png" sizes="96x96" />
-        <link rel="icon" type="image/svg+xml" href="/icons/favicon/favicon.svg" />
-        <link rel="shortcut icon" href="/icons/favicon/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/icons/favicon/apple-touch-icon.png" />
-        <link rel="manifest" href="/icons/favicon/site.webmanifest" />
-    </head>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Word Fuse</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&family=Open+Sans:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+    <meta name="theme-color" content="#f8f9fa">
+</head>
 
-    <body>
-        <section id="landing">
+<body>
+    <section id="landing">
+        <div class="landing-content">
             <h1>Word Fuse</h1>
-            <p>8-letter words are halved. <br>Select two halves to find a valid word.</p>
-            <table class="mode-table">
-                <tbody>
-                    <tr>
-                        <td><strong>1-Player</strong></td>
-                        <td>
-                            <ul>
-                                <li>Find all 6 words in 30 seconds.</li>
-                                <li>Clear as many levels as you can.</li>
-                                <li>Words get harder each level.</li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>2-Player</strong></td>
-                        <td>
-                            <ul>
-                                <li>Study the grid.</li>
-                                <li>First player to accept has 15s to clear it.</li>
-                                <li>Succeed and score 1 point; fail and your opponent does.</li>
-                                <li>Score 3 points to win the match.</li>
-                            </ul>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <p>Select two halves to fuse a word.</p>
+
+            <div class="rules-container">
+                <div class="rule-card">
+                    <div class="rule-title">1-Player</div>
+                    <ul>
+                        <li>Find 6 words in 30 seconds.</li>
+                        <li>Clear as many levels as you can.</li>
+                        <li>Words get harder each level.</li>
+                    </ul>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-title">2-Player</div>
+                    <ul>
+                        <li>First to accept gets 15s to solve.</li>
+                        <li><strong>+1</strong> point for success.</li>
+                        <li><strong>Opponent scores</strong> if you fail.</li>
+                        <li>First to 3 points wins.</li>
+                    </ul>
+                </div>
+            </div>
+
             <div class="btn-row">
                 <button id="singleBtn">1-Player</button>
                 <button id="twoBtn">2-Player</button>
             </div>
-        </section>
-        <div id="gameRoot">
-            <header>
-                <div id="singleHeader">
-                    <h3>Score: <span id="score">0</span></h3>
-                    <h3 id="timer1">30</h3>
-                </div>
-                <div id="twoHeader">
-                    <h3>Player One: <span id="p1Score">0</span></h3>
-                    <h3 id="timer2">10</h3>
-                    <h3>Player Two: <span id="p2Score">0</span></h3>
-                </div>
-            </header>
-            <main class="game-area">
-                <div id="message" class="message"></div>
-                <div id="grid"></div>
-                <div class="accept-row">
-                    <button id="p1Accept">P1 Accept</button>
-                    <button id="p2Accept">P2 Accept</button>
-                </div>
-            </main>
         </div>
-        <script src="landing.js"></script>
-    </body>
+    </section>
+
+    <div id="gameRoot">
+        <header>
+            <div id="singleHeader">
+                <div class="score-box">Score: <span id="score">0</span></div>
+                <div class="timer-box" id="timer1">30</div>
+            </div>
+            <div id="twoHeader">
+                <div class="score-box">P1: <span id="p1Score">0</span></div>
+                <div class="timer-box" id="timer2">10</div>
+                <div class="score-box">P2: <span id="p2Score">0</span></div>
+            </div>
+        </header>
+        <main class="game-area">
+            <div id="message" class="message"></div>
+            <div id="grid"></div>
+            <div class="accept-row">
+                <button id="p1Accept">P1 Accept</button>
+                <button id="p2Accept">P2 Accept</button>
+            </div>
+        </main>
+    </div>
+    <script src="landing.js"></script>
+</body>
 
 </html>
