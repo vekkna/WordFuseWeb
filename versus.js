@@ -81,20 +81,21 @@ function handleRoundEnd(activePlayerSolved, reason, details) {
     scores[winner]++;
     updateScoreUI();
 
+    let subMsg = '';
+    if (!activePlayerSolved && reason === 'wrong' && details) {
+        subMsg = `
+            <div class="feedback">
+                <p class="wrong-guess">${details.entered} <span>&#10006;</span></p>
+            </div>`;
+    }
+
     if (scores[winner] === 3) {
         msg.innerHTML = `<h2>Player ${winner + 1} wins the match!</h2>
+                     ${subMsg}
                      <br><button id="newMatch">Back</button>`;
         document.getElementById('newMatch')
             .addEventListener('click', () => window.location.reload());
     } else {
-        let subMsg = '';
-        if (!activePlayerSolved && reason === 'wrong' && details) {
-            subMsg = `
-                <div class="feedback">
-                    <p class="wrong-guess">${details.entered} <span>&#10006;</span></p>
-                </div>`;
-        }
-
         msg.innerHTML = `<h3>Player ${winner + 1} scores a point!</h3>
             ${subMsg}
             <button id="nextRound">Next round</button>`;
@@ -117,5 +118,5 @@ function updateScoreUI() {
 
 function getCurrentDifficulty() {
     const losingScore = Math.min(...scores);
-    return 2000 + losingScore * 2000;
+    return 2000 + losingScore * 1000;
 }
