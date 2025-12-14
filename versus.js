@@ -11,7 +11,7 @@ const p1UI = document.getElementById('p1Score');
 const p2UI = document.getElementById('p2Score');
 
 const scores = [0, 0];
-const time = 12;
+const time = 15;
 
 let active = null;
 let awaitingAccept = false;
@@ -117,5 +117,5 @@ function updateScoreUI() {
 
 function getCurrentDifficulty() {
     const losingScore = Math.min(...scores);
-    return 1000 + losingScore * 1000;
+    return 2000 + losingScore * 2000;
 }
