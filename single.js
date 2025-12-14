@@ -101,7 +101,9 @@ export class WordSplitGame {
     }
 
     startNewRound(poolSizeOverride, startNow = true) {
-        this._clearTimer();
+        if (!this.continuousTimer || startNow) {
+            this._clearTimer();
+        }
         this._clearGrid();
         this._resetSelections();
         this._roundMatches = 0;
