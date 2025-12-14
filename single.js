@@ -271,7 +271,7 @@ export class WordSplitGame {
         } else {
             // Continuous mode, non-terminal event (win or skip)
             if (playerWon) {
-                this.addTime(15);
+                this.addTime(20);
             }
             this._increaseDifficulty();
             // We don't lock interaction because we want to seamlessly go to next grid?

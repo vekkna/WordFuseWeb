@@ -64,7 +64,7 @@ singleBtn.addEventListener('click', async () => {
 
     message.innerHTML = '';
     // Start with 60s
-    game.startNewRound();
+    game.startNewRound(undefined, false);
     game.startTimer(60);
 });
 
