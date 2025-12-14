@@ -30,11 +30,19 @@ singleBtn.addEventListener('click', async () => {
         scoreEl: score,
         timerEl: timer,
         messageEl: message,
-        onRoundEnd({ won, reason }) {
+        onRoundEnd({ won, reason, details }) {
             if (!won) {
-                message.innerHTML = `
-            <h3>${reason === 'time' ? 'Time’s up!' : 'Incorrect match!'}</h3>
-            <button id="playAgain">Back</button>`;
+                let html = `<h3>${reason === 'time' ? 'Time’s up!' : 'Incorrect match!'}</h3>`;
+
+                if (reason === 'wrong' && details) {
+                    html += `
+                    <div class="feedback">
+                        <p class="wrong-guess">${details.entered} <span>&#10006;</span></p>
+                    </div>`;
+                }
+
+                html += `<button id="playAgain">Back</button>`;
+                message.innerHTML = html;
                 document.getElementById('playAgain')
                     .addEventListener('click', () => {
                         window.location.reload();

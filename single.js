@@ -237,11 +237,11 @@ export class WordSplitGame {
                 this._roundComplete(true);
             }
         } else {
-            this._roundComplete(false, 'wrong');
+            this._roundComplete(false, 'wrong', { entered: candidate });
         }
     }
 
-    _roundComplete(playerWon, reason = 'complete') {
+    _roundComplete(playerWon, reason = 'complete', details = null) {
         this._clearTimer();
         this._resetSelections();
 
@@ -251,7 +251,7 @@ export class WordSplitGame {
             this._increaseDifficulty();
         }
 
-        this.onRoundEnd?.({ won: playerWon, reason });
+        this.onRoundEnd?.({ won: playerWon, reason, details });
     }
 
     _increaseDifficulty() {

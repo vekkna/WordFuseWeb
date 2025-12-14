@@ -11,7 +11,7 @@ const p1UI = document.getElementById('p1Score');
 const p2UI = document.getElementById('p2Score');
 
 const scores = [0, 0];
-const time = 10;
+const time = 15;
 
 let active = null;
 let awaitingAccept = false;
@@ -21,8 +21,8 @@ const game = new WordSplitGame({
     gridEl: grid,
     scoreEl: { textContent: '' },
     timerEl: timer,
-    onRoundEnd: ({ won }) => {
-        handleRoundEnd(won);
+    onRoundEnd: ({ won, reason, details }) => {
+        handleRoundEnd(won, reason, details);
     }
 });
 
@@ -69,12 +69,12 @@ function startTurnTimer() {
         timer.textContent = --t;
         if (t === 0) {
             clearInterval(turnTimerId);
-            handleRoundEnd(false);
+            handleRoundEnd(false, 'time');
         }
     }, 1000);
 }
 
-function handleRoundEnd(activePlayerSolved) {
+function handleRoundEnd(activePlayerSolved, reason, details) {
     clearInterval(turnTimerId);
 
     const winner = activePlayerSolved ? active : 1 - active;
@@ -87,7 +87,16 @@ function handleRoundEnd(activePlayerSolved) {
         document.getElementById('newMatch')
             .addEventListener('click', () => window.location.reload());
     } else {
+        let subMsg = '';
+        if (!activePlayerSolved && reason === 'wrong' && details) {
+            subMsg = `
+                <div class="feedback">
+                    <p class="wrong-guess">${details.entered} <span>&#10006;</span></p>
+                </div>`;
+        }
+
         msg.innerHTML = `<h3>Player ${winner + 1} scores a point!</h3>
+            ${subMsg}
             <button id="nextRound">Next round</button>`;
         document.getElementById('nextRound')
             .addEventListener('click', () => {
