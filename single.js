@@ -15,7 +15,9 @@ export class WordSplitGame {
         scoreEl = null,
         timerEl = null,
         messageEl = null,
-        onRoundEnd = null
+        onRoundEnd = null,
+        continuousTimer = false,
+        scoringType = 'rounds' // 'rounds' or 'words'
     }) {
         if (!gridEl) throw new Error('WordSplitGame needs a gridEl');
 
@@ -25,6 +27,8 @@ export class WordSplitGame {
         this.messageEl = messageEl;
 
         this.onRoundEnd = onRoundEnd;
+        this.continuousTimer = continuousTimer;
+        this.scoringType = scoringType;
 
         this._currentPoolSize = 200;
         this._totalScore = 0;
@@ -200,6 +204,7 @@ export class WordSplitGame {
         this._remainingTime--;
         this._updateTimerUI();
         if (this._remainingTime <= 0) {
+            this._clearTimer(); // Stop the interval immediately
             this._roundComplete(false, 'time');
         }
     }
@@ -228,11 +233,17 @@ export class WordSplitGame {
             tile.classList.add('matched');
 
             this._roundMatches++;
-            this._updateScoreUI();
+
+            if (this.scoringType === 'words') {
+                this._totalScore++;
+                this._updateScoreUI();
+            }
             this._selectedTile = null;
 
             if (this._roundMatches === WordSplitGame.WORDS_PER_ROUND) {
-                this._totalScore++;
+                if (this.scoringType === 'rounds') {
+                    this._totalScore++;
+                }
                 this._updateScoreUI();
                 this._roundComplete(true);
             }
@@ -241,13 +252,41 @@ export class WordSplitGame {
         }
     }
 
+    addTime(seconds) {
+        this._remainingTime += seconds;
+        this._updateTimerUI();
+    }
+
+    skipRound() {
+        this._roundComplete(false, 'skip');
+    }
+
     _roundComplete(playerWon, reason = 'complete', details = null) {
-        this._clearTimer();
         this._resetSelections();
 
-        this.lockInteraction();
+        // In continuous mode, we don't stop the timer unless it ran out
+        if (!this.continuousTimer || reason === 'time') {
+            this._clearTimer();
+            this.lockInteraction();
+        } else {
+            // Continuous mode, non-terminal event (win or skip)
+            if (playerWon) {
+                this.addTime(15);
+            }
+            this._increaseDifficulty();
+            // We don't lock interaction because we want to seamlessly go to next grid?
+            // Actually, landing.js usually handles the "Next" logic via onRoundEnd.
+            // We'll stick to that contract: notify listener, let them call startNewRound.
 
-        if (playerWon) {
+            // But we probably shouldn't show the "Winner" screen.
+            // We rely on the callback to decide.
+        }
+
+        if (!this.continuousTimer) {
+            this.lockInteraction();
+        }
+
+        if (playerWon && !this.continuousTimer) {
             this._increaseDifficulty();
         }
 

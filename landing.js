@@ -30,32 +30,42 @@ singleBtn.addEventListener('click', async () => {
         scoreEl: score,
         timerEl: timer,
         messageEl: message,
+        continuousTimer: true,
+        scoringType: 'words',
         onRoundEnd({ won, reason, details }) {
-            if (!won) {
-                let html = `<h3>${reason === 'time' ? 'Time’s up!' : 'Incorrect match!'}</h3>`;
-
-                if (reason === 'wrong' && details) {
-                    html += `
-                    <div class="feedback">
-                        <p class="wrong-guess">${details.entered} <span>&#10006;</span></p>
-                    </div>`;
-                }
-
-                html += `<button id="playAgain">Back</button>`;
-                message.innerHTML = html;
+            if (reason === 'time') {
+                message.innerHTML = `
+            <h3>Time’s up!</h3>
+            <div class="result-score">Final Score: ${score.textContent}</div>
+            <button id="playAgain">Play Again</button>`;
                 document.getElementById('playAgain')
                     .addEventListener('click', () => {
                         window.location.reload();
                     }, { once: true });
+            } else if (reason === 'wrong' && details) {
+                const feedbackHtml = `
+                    <div class="feedback-toast">
+                        <span class="wrong-guess">${details.entered} <span>&#10006;</span></span>
+                    </div>`;
+                message.innerHTML = feedbackHtml;
+
+                // Skip round after delay
+                setTimeout(() => {
+                    message.innerHTML = '';
+                    game.skipRound();
+                }, 1500);
             } else {
-                setTimeout(() => game.startNewRound(), 800);
+                // Won (cleared grid) or Skipped
+                game.startNewRound(undefined, false); // Don't reset timer
             }
         }
 
     });
 
     message.innerHTML = '';
+    // Start with 60s
     game.startNewRound();
+    game.startTimer(60);
 });
 
 

@@ -405,3 +405,20 @@ header {
     justify-content: center;
     gap: 10px;
 }
+
+
+
+.feedback-toast {
+    margin: 1rem;
+    padding: 0.5rem;
+    background: rgba(255, 230, 230, 0.9);
+    border-radius: 4px;
+    border: 1px solid #ffcccc;
+}
+
+.result-score {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 1rem 0;
+    color: var(--color-ink);
+}
